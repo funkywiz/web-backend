@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
+var cors = require('cors');
 var LocalStrategy = require('passport-local').Strategy;
 
 var bodyParser = require('body-parser');
@@ -18,10 +19,13 @@ router.get('/login',function(req,res){
 router.post('/register',function(req,res){
  	maincontroller.verification(req,res);
  });
-router.post('/login', passport.authenticate('local', {successRedirect:'/', failureRedirect:'/login'}),
+router.post('/login',function(req,res){
+console.log("SUCCESS");
+});/*
+router.post('/login',cors(), passport.authenticate('local', {successRedirect:'/', failureRedirect:'/'}),
     function(req, res) {
-        res.redirect('http://localhost:3030/');
-    });
+    console.log("ACCESS GRANTED");
+    });*/
 passport.use(new LocalStrategy(
     function(email, password, done) {
         User.getUserByEmail(email,function(err, user){
@@ -33,8 +37,8 @@ passport.use(new LocalStrategy(
             User.comparePassword(password, user.password, function(err, isMatch){
                 if(err) throw err;
                 if(isMatch){
-                    return done(null, user);
                     console.log('User is found');
+                    return done(null, user);
                 } else {
                     return done(null, false, {message: 'Invalid password'});
                 }

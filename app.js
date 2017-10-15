@@ -3,8 +3,10 @@ var bodyParser = require('body-parser');
 var path = require('path');
 var routes= require('./routes/index.js');
 var mongo = require('mongodb');
+var session = require('express-session');
 var mongoose = require('mongoose');
 var passport = require('passport');
+var cors = require('cors');
 var LocalStrategy = require('passport-local').Strategy;
 mongoose.connect('mongodb://localhost/webdevops');
 var db = mongoose.connection;
@@ -12,13 +14,15 @@ console.log('DB connected');
 
 //init app
 var app = express();
-/*
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-});*/
+
+app.use(cors());
+
+// Express Session
+app.use(session({
+    secret: 'secret',
+    saveUninitialized: true,
+    resave: true
+}));
 
 // Passport init
 app.use(passport.initialize());
