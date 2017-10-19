@@ -7,17 +7,11 @@
             var lname = req.body.lname;
             var email = req.body.email;
             var password = req.body.password;
-            console.log("Getting packages");
-            console.log(fname);
-            console.log(lname);
-            console.log(email);
-            console.log(password);
             User.getUserByEmail(email, function (err, user) {
                 if (err) throw err;
                 if (user) {
                     console.log("User already exists");
                     res.sendStatus(301);
-
                 }
                 else {
                     var newUser = new User({
